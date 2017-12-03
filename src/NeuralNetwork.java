@@ -31,6 +31,25 @@ public class NeuralNetwork {
 
 	}
 	
+	public void makeNetwork() {
+		NeuronLayer inputLayer = new NeuronLayer(LayerType.INPUT, numInputNeurons, 0, 0);
+		NeuronLayer hiddenLayer = new NeuronLayer(LayerType.HIDDEN, 3, numInputNeurons, 1);
+		NeuronLayer outputLayer = new NeuronLayer(LayerType.OUTPUT, numOutputNeurons, 3, 2);
+		
+		inputLayer.initializeEmpty();
+		hiddenLayer.initializeRandomState();
+		outputLayer.initializeRandomState();
+		
+		inputLayer.printState();
+		hiddenLayer.printState();
+		outputLayer.printState();
+		
+		layers = new NeuronLayer[3];
+		layers[0] = inputLayer;
+		layers[1] = hiddenLayer;
+		layers[2] = outputLayer;
+	}
+	
 	public void processInputs() {
 		double[] x_prev = null; //x = output vector for a layer. Rows represent different neuron's outputs.
 		double[] x0 = new double[inputs[0].length];
@@ -74,6 +93,10 @@ public class NeuralNetwork {
 				System.out.println("Output: " + x_prev[0]);
 			}
 			
+			//System.out.println("--Output length (should be one): " + x_prev.length);
+			
+			
+			
 			//TODO tmp only process first input
 			//if(i == 0) {
 			//	System.out.println("x[0] = " + x[0] + "; x[1] = " + x[1]);
@@ -101,24 +124,6 @@ public class NeuralNetwork {
 		return 1/(1 + Math.exp(-t));
 	}
 	
-	public void makeNetwork() {
-		NeuronLayer inputLayer = new NeuronLayer(LayerType.INPUT, numInputNeurons, 0, 0);
-		NeuronLayer hiddenLayer = new NeuronLayer(LayerType.HIDDEN, 3, numInputNeurons, 1);
-		NeuronLayer outputLayer = new NeuronLayer(LayerType.OUTPUT, numOutputNeurons, 3, 2);
-		
-		inputLayer.initializeEmpty();
-		hiddenLayer.initializeRandomState();
-		outputLayer.initializeRandomState();
-		
-		inputLayer.printState();
-		hiddenLayer.printState();
-		outputLayer.printState();
-		
-		layers = new NeuronLayer[3];
-		layers[0] = inputLayer;
-		layers[1] = hiddenLayer;
-		layers[2] = outputLayer;
-	}
 	
 
 }
