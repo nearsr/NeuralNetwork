@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 
 //This code only supports one layer of hidden neurons
+//Sources: 
+//https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+//https://kunuk.wordpress.com/2010/10/11/neural-network-backpropagation-with-java/
+
 
 public class NeuralNetwork {
 	NeuronLayer[] layers;
@@ -103,11 +107,9 @@ public class NeuralNetwork {
 			}
 
 			//Back propagation
-			//Great example: https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
-			
-			for (int neuron = 0; neuron < layers[0].getNumNeurons(); neuron++) {//go through all neurons in output layer
-				for (int connection = 0; connection < layers[0].getWeights().length; connection++) {// go through all connecting weights
-					double[][] weights = layers[0].getWeights();
+			for (int neuron = 0; neuron < layers[2].getNumNeurons(); neuron++) {//go through all neurons in output layer
+				for (int connection = 0; connection < layers[2].getWeights()[neuron].length; connection++) {// go through all connecting weights
+					double[][] weights = layers[2].getWeights();
 					double[] W = weights[neuron];
 					double currentWeight = W[connection];
 
@@ -122,12 +124,53 @@ public class NeuralNetwork {
 					double deltaWeight = -learningRate * partialDerivative;
 					double newWeight = currentWeight + deltaWeight;
 					
-					layers[0].getWeights()[neuron][connection] = newWeight;
+					layers[2].getWeights()[neuron][connection] = newWeight;
+					
+					//ak = out
+					//ai = hiddenOut
 				}
-
 			}
 			
+			//Hidden layer is a bit different
+			for (int neuron = 0; neuron < layers[1].getNumNeurons(); neuron++) {//go through all neurons in hidden layer
+				for (int connection = 0; connection < layers[1].getWeights()[neuron].length; connection++) {// go through all connecting weights
+					double[][] weights = layers[1].getWeights();
+					double[] W = weights[neuron];
+					double currentWeight = W[connection];
+
+					//output of current hidden neuron
+					double hiddenOut = hiddenOutputs[neuron]; //aj, now our outputs are from hidden layer
+					//this next one is like hiddenOut in previous step
+					double firstOut = inputs[i][connection]; //ai
+					
+					double sumKoutputs = 0;
+					for (int outNeuron = 0; outNeuron < layers[2].getNumNeurons(); outNeuron++) {
+						double out =  outputs[outNeuron]; //ak
+						double targetOut =  trueOutputs[i][outNeuron];
+						//wjk = get weight of connection between current hidden layer neuron and
+						//		current output neuron
+						double wjk = layers[2].getWeights()[outNeuron][neuron];
+
+						sumKoutputs = sumKoutputs+ (-(targetOut-out) * out * (1-out) * wjk);
+					}
+
+					double partialDerivative = hiddenOut * (1-hiddenOut) * firstOut * sumKoutputs;
+					double deltaWeight = -learningRate * partialDerivative;
+					double newWeight = currentWeight + deltaWeight;
+					
+					layers[1].getWeights()[neuron][connection] = newWeight;
+					
+					//ai = inputNeuron.getOutput ==> inputs
+					//aj = hiddenNeuron.getOutput ==>hiddenOutputs
+					//ak = outputNeuron.getOutput ==> out
+					//wjk = get weight of connection between current hidden layer neuron and
+					//		current output neuron
+				}
+			}			
 			
+			for (int r = 0; r<layers.length; r++) {
+				layers[r].printState();
+			}
 		}
 	}
 	
