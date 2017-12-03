@@ -59,6 +59,38 @@ public class NeuronLayer {
 		
 	}
 	
+	public double[][] getWeights() {
+		return weights;
+	}
+
+	public void setWeights(double[][] weights) {
+		this.weights = weights;
+	}
+
+	public double[] getThreshes() {
+		return threshes;
+	}
+
+	public void setThreshes(double[] threshes) {
+		this.threshes = threshes;
+	}
+
+	public LayerType getType() {
+		return type;
+	}
+
+	public int getNumNeurons() {
+		return n;
+	}
+
+	public int getLayerNum() {
+		return l;
+	}
+
+	public int getNumNeuronsPrev() {
+		return n_prev;
+	}
+
 	public void printState() {
 		System.out.println("Layer " + l);
 		for (int i =0 ; i < n; i++) {//loop through neurons slower
