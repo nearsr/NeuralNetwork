@@ -20,12 +20,15 @@ public class NeuralNetwork {
 	
 	public NeuralNetwork() {
 
+		ImageReader reader = new ImageReader();
+		byte[] img = reader.readImage("faces/kawamura/kawamura_left_happy_sunglasses_4.pgm");
 		
 	    makeNetwork();
 	    
 	    int i = 0;
+	    int bound = 1;
 	    
-	    while(i < 1000) {
+	    while(i < bound) {
 	    	 trainInputs();
 	    	 i++;
 	    }
