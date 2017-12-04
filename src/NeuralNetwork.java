@@ -21,9 +21,10 @@ public class NeuralNetwork {
 	public NeuralNetwork() {
 
 		ImageReader reader = new ImageReader();
-		byte[] img = reader.readImage("faces/kawamura/kawamura_left_happy_sunglasses_4.pgm");
+		reader.createTrainingInput();
 		
-	    makeNetwork();
+		
+	    /*makeNetwork();
 	    
 	    int i = 0;
 	    int bound = 1;
@@ -32,6 +33,7 @@ public class NeuralNetwork {
 	    	 trainInputs();
 	    	 i++;
 	    }
+	    */
 	   
 
 	}
