@@ -23,8 +23,8 @@ public class NeuralNetwork {
 		ImageReader reader = new ImageReader();
 		reader.createTrainingInput();
 		
-		
-	    /*makeNetwork();
+		/*
+	    makeNetwork();
 	    
 	    int i = 0;
 	    int bound = 1;
@@ -34,11 +34,40 @@ public class NeuralNetwork {
 	    	 i++;
 	    }
 	    */
-	   
-
 	}
 	
 	public void makeNetwork() {
+		//Number of input and output variables
+		//will determine number of input and output neurons
+		numInputNeurons = 30*32; //dimensions of img
+		numOutputNeurons = 4; //types of moods
+		//Learning rate determines how far in the direction of steepest descent to change the parameter
+		learningRate = 0.5; //.3 is recommended by Machine Learning -Tom Mitchell for this type of problem
+		//row, col
+		//row represents an input, cols are variables in that input
+		//row represents an output, cols are nodes that store vars for that output (in the case of XOR example, 1 output node)
+		inputs = new double[][]{{1, 1}, {1, 0}, {0, 1}, {0, 0}};
+	    trueOutputs = new double[][]{{0}, {1}, {1}, {0}};
+	    
+		NeuronLayer inputLayer = new NeuronLayer(LayerType.INPUT, numInputNeurons, 0, 0);
+		NeuronLayer hiddenLayer = new NeuronLayer(LayerType.HIDDEN, 3, numInputNeurons, 1);
+		NeuronLayer outputLayer = new NeuronLayer(LayerType.OUTPUT, numOutputNeurons, 3, 2);
+		
+		inputLayer.initializeEmpty();
+		hiddenLayer.initializeRandomState();
+		outputLayer.initializeRandomState();
+		
+		inputLayer.printState();
+		hiddenLayer.printState();
+		outputLayer.printState();
+		
+		layers = new NeuronLayer[3];
+		layers[0] = inputLayer;
+		layers[1] = hiddenLayer;
+		layers[2] = outputLayer;
+	}
+	
+	public void makeTestNetwork() {
 		//Number of input and output variables
 		//will determine number of input and output neurons
 		numInputNeurons = 2;

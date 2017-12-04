@@ -156,14 +156,18 @@ public class ImageReader {
 				}
 			}
 		}
+		//printInfo();
+
+		normalizeImages();
+	}
+	
+	public void printInfo() {
 		System.out.println(peopleList);
 		for (TrainingImage t : trainingImages) {
 			System.out.println(t.toString());
 		}
 		System.out.println("Maximum val observed in image byte arrays: " + observedMaxVal);
 		System.out.println("Maximum val claimed in file header: " + encodedMaxVal);
-
-		normalizeImages();
 	}
 
 	public ArrayList<String> getPeopleList() {
