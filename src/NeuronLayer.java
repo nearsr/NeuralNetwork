@@ -16,7 +16,7 @@ public class NeuronLayer {
 	double[] threshes; //ThetaL = nl * 1 vector whose entries correspond to the biases of the units in layer l
 	
 	Random rand = new Random(l); //use layer num as seed
-	DecimalFormat df = new DecimalFormat("#.##");
+	DecimalFormat df = new DecimalFormat("#.####");
 	
 	public NeuronLayer(LayerType type, int numNeurons, int numNeuronsPrevLayer, int layerDepth) {
 		this.type = type;
