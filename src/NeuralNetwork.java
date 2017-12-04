@@ -25,7 +25,7 @@ public class NeuralNetwork {
 	private int numTrainingCutoff;
 
 	boolean allowSunglasses = true;
-	boolean runTest = true;
+	boolean runTest = false;
 
 
 	public static void main(String[] args) {
@@ -45,16 +45,16 @@ public class NeuralNetwork {
 			makeNetwork();
 		}
 
-		
+		/*
 	    int i = 0;
-	    int bound = 1000;
+	    int bound = 500;
 
 	    while(i < bound) {
 	    	 trainInputs();
 	    	 i++;
-	    }
+	    }*/
 
-		//trainInputs();
+		trainInputs();
 		validateInputs();
 	}
 
@@ -242,7 +242,9 @@ public class NeuralNetwork {
 				}
 			}
 		}
-		System.out.println("\n\ntotalNum " + totalNumImages + " num to use for train " + numTrainingCutoff + " num for check " + (totalNumImages - numTrainingCutoff));
+		System.out.println("\n\nRunning XOR test: " + runTest);
+		System.out.println("Allowing sunglasses: " + allowSunglasses);
+		System.out.println("totalNum " + totalNumImages + " num to use for train " + numTrainingCutoff + " num for check " + (totalNumImages - numTrainingCutoff));
 		System.out.println("Validations correct: " + numCheckCorrect + " Total number of validations: " + numCheckTotal);
 		System.out.println("% of validations correct: " + ((double)numCheckCorrect/numCheckTotal));
 	}
