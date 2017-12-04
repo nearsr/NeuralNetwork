@@ -35,11 +35,16 @@ public class ImageReader {
 	byte observedMaxVal = 0;
 	int encodedMaxVal = 0;
 	DecimalFormat df = new DecimalFormat("#.##");
+	public boolean verbose = false;
 
 	public ImageReader(){
 
 	}
 
+	public int getMaxImageId() {
+		return id;
+	}
+	
 	public void normalizeImages() {
 		for (TrainingImage t : trainingImages) {
 			double[] normalizedImage = new double[t.getByteImage().length];
@@ -89,7 +94,7 @@ public class ImageReader {
 		File [] files = path.listFiles();
 		for (int i = 0; i < files.length; i++){
 			if (files[i].isDirectory()) {
-				System.out.println(files[i]);
+				//System.out.println(files[i]);
 				File[] imageFiles = files[i].listFiles();
 				for (int j = 0; j < imageFiles.length; j++){
 					if (imageFiles[j].isFile()){ //ignore directories
@@ -156,7 +161,7 @@ public class ImageReader {
 				}
 			}
 		}
-		//printInfo();
+		if(verbose) printInfo();
 
 		normalizeImages();
 	}
@@ -262,10 +267,10 @@ public class ImageReader {
 			} catch (EOFException eof) {
 				eof.printStackTrace(System.out) ;
 			}
-			System.out.println("Height=" + height);
-			System.out.println("Width=" + width);
-			System.out.println("Required elements=" + (height * width));
-			System.out.println("Obtained elements=" + count);
+			if(verbose) System.out.println("Height=" + height);
+			if(verbose) System.out.println("Width=" + width);
+			if(verbose) System.out.println("Required elements=" + (height * width));
+			if(verbose) System.out.println("Obtained elements=" + count);
 
 			d.close();
 			f.close();

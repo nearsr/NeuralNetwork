@@ -10,9 +10,14 @@ public class NeuralNetwork {
 	NeuronLayer[] layers;
 	double[][] inputs;
 	double[][] trueOutputs;
+	double[][] checkInputs;
+	double[][] checkOutputs;
 	int numInputNeurons;
 	int numOutputNeurons;
+	int numHiddenNeurons;
 	double learningRate;
+	ImageReader reader;
+	ArrayList<TrainingImage> trainingImages;
 	
 	public static void main(String[] args) {
 		NeuralNetwork network = new NeuralNetwork();
@@ -20,12 +25,14 @@ public class NeuralNetwork {
 	
 	public NeuralNetwork() {
 
-		ImageReader reader = new ImageReader();
+		reader = new ImageReader();
 		reader.createTrainingInput();
+		trainingImages = reader.getTrainingImages();
 		
-		/*
 	    makeNetwork();
 	    
+	    //For testing only
+	    /*
 	    int i = 0;
 	    int bound = 1;
 	    
@@ -34,6 +41,8 @@ public class NeuralNetwork {
 	    	 i++;
 	    }
 	    */
+	    
+	    trainInputs();
 	}
 	
 	public void makeNetwork() {
@@ -41,17 +50,46 @@ public class NeuralNetwork {
 		//will determine number of input and output neurons
 		numInputNeurons = 30*32; //dimensions of img
 		numOutputNeurons = 4; //types of moods
+		numHiddenNeurons = 3; //recommended for this problem
 		//Learning rate determines how far in the direction of steepest descent to change the parameter
 		learningRate = 0.5; //.3 is recommended by Machine Learning -Tom Mitchell for this type of problem
+		
+		double verificationPercent = .2;
+		int totalNumImages = reader.getMaxImageId();
+		int numTrainingCutoff = (int) Math.round(totalNumImages*(1.0-0.2));
+		
+		System.out.println("totalNum " + totalNumImages + " num to use for train " + numTrainingCutoff + " num for check " + (totalNumImages - numTrainingCutoff));
+
 		//row, col
 		//row represents an input, cols are variables in that input
 		//row represents an output, cols are nodes that store vars for that output (in the case of XOR example, 1 output node)
-		inputs = new double[][]{{1, 1}, {1, 0}, {0, 1}, {0, 0}};
-	    trueOutputs = new double[][]{{0}, {1}, {1}, {0}};
+		inputs = new double[numTrainingCutoff][numInputNeurons];
+	    trueOutputs = new double[numTrainingCutoff][numOutputNeurons];
+	    //the below are for verification
+		checkInputs = new double[totalNumImages - numTrainingCutoff][numInputNeurons];
+	    checkOutputs = new double[totalNumImages - numTrainingCutoff][numOutputNeurons];
+	    
+	    int i = 0;
+	    int j = 0;
+	    for (TrainingImage t : trainingImages) {
+	    	double[] nextInput = t.getNormalizedImage();
+	    	double[] nextOutput = t.getExpectedOutput();
+	    	
+	    	if (i < numTrainingCutoff) {//add to training input
+	    		inputs[i] = nextInput;
+	    		trueOutputs[i] = nextOutput;
+	    		i++;
+	    	}
+	    	else {//add to check input
+	    		checkInputs[j] = nextInput;
+	    		checkOutputs[j] = nextOutput;
+	    		j++;
+	    	}
+	    }
 	    
 		NeuronLayer inputLayer = new NeuronLayer(LayerType.INPUT, numInputNeurons, 0, 0);
-		NeuronLayer hiddenLayer = new NeuronLayer(LayerType.HIDDEN, 3, numInputNeurons, 1);
-		NeuronLayer outputLayer = new NeuronLayer(LayerType.OUTPUT, numOutputNeurons, 3, 2);
+		NeuronLayer hiddenLayer = new NeuronLayer(LayerType.HIDDEN, numHiddenNeurons, numInputNeurons, 1);
+		NeuronLayer outputLayer = new NeuronLayer(LayerType.OUTPUT, numOutputNeurons, numHiddenNeurons, 2);
 		
 		inputLayer.initializeEmpty();
 		hiddenLayer.initializeRandomState();
@@ -96,6 +134,10 @@ public class NeuralNetwork {
 		layers[0] = inputLayer;
 		layers[1] = hiddenLayer;
 		layers[2] = outputLayer;
+	}
+	
+	public void validateInputs() {
+		
 	}
 		
 	public void trainInputs() {
