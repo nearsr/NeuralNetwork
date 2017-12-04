@@ -45,16 +45,16 @@ public class NeuralNetwork {
 			makeNetwork();
 		}
 
-		/*
+		
 	    int i = 0;
-	    int bound = 100;
+	    int bound = 1000;
 
 	    while(i < bound) {
 	    	 trainInputs();
 	    	 i++;
-	    }*/
+	    }
 
-		trainInputs();
+		//trainInputs();
 		validateInputs();
 	}
 
