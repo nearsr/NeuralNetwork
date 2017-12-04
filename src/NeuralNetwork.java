@@ -26,7 +26,7 @@ public class NeuralNetwork {
 	    int i = 0;
 	    
 	    while(i < 1000) {
-	    	 processInputs();
+	    	 trainInputs();
 	    	 i++;
 	    }
 	   
@@ -64,7 +64,7 @@ public class NeuralNetwork {
 		layers[2] = outputLayer;
 	}
 		
-	public void processInputs() {
+	public void trainInputs() {
 		double[] x_prev = null; //x = output vector for a layer. Rows represent different neuron's outputs.
 		double[] outputs = null;
 		double[] hiddenOutputs = null;
