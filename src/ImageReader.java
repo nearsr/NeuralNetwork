@@ -44,12 +44,12 @@ public class ImageReader {
 	public int getMaxImageId() {
 		return id;
 	}
-	
+
 	public void normalizeImages() {
 		for (TrainingImage t : trainingImages) {
 			double[] normalizedImage = new double[t.getByteImage().length];
 			int i = 0;
-			
+
 			for (byte val : t.getByteImage()) {
 				//System.out.println(b + " " +(double)b);
 
@@ -69,22 +69,22 @@ public class ImageReader {
 				double max = (double)observedMaxVal;
 
 				double normalizedVal = (b-a)*(x-min)/(max-min) +a;
-				
+
 				if (val == 127) {
 					break;
 				}
-				
+
 				normalizedImage[i] = normalizedVal;
 				i++;
 			}
-			
+
 			t.setNormalizedImage(normalizedImage);
 			//System.out.println("Byte array: " + Arrays.toString(t.getByteImage()));
 			//System.out.println("Scaled double array: " + Arrays.toString(normalizedImage));
 		}
 	}
 
-	public void createTrainingInput() {
+	public void createTrainingInput(boolean allowSunglasses) {
 		//byte[] img = readImage("faces/kawamura/kawamura_left_happy_sunglasses_4.pgm");
 		//For some reason, file path needs to include bin, but file read must not have bin
 
@@ -126,34 +126,35 @@ public class ImageReader {
 						//System.out.println(loc);
 
 						//Add to array of training images if it is a #4, aka 30x32 image
-						if (imageInfo.contains("4")) {;
-						boolean sunglasses = false;
-						Class mood = null;
-						byte[] image = readImage(loc);
+						if (imageInfo.contains("4")) {
+							boolean sunglasses = false;
+							Class mood = null;
+							byte[] image = readImage(loc);
 
-						if(imageInfo.contains("sunglasses")) {
-							sunglasses = true;
-						}
-						if(imageInfo.contains("neutral")) {
-							mood = Class.NEUTRAL;
-						}
-						else if(imageInfo.contains("happy")) {
-							mood = Class.HAPPY;
-						}
-						else if(imageInfo.contains("sad")) {
-							mood = Class.SAD;
-						}
-						else if(imageInfo.contains("angry")) {
-							mood = Class.ANGRY;
-						}
-						else{
-							System.out.println("No emotion listed");
-							System.exit(1);
-						}
+							if(imageInfo.contains("sunglasses")) {
+								sunglasses = true;
+								if(!allowSunglasses) continue;
+							}
+							if(imageInfo.contains("neutral")) {
+								mood = Class.NEUTRAL;
+							}
+							else if(imageInfo.contains("happy")) {
+								mood = Class.HAPPY;
+							}
+							else if(imageInfo.contains("sad")) {
+								mood = Class.SAD;
+							}
+							else if(imageInfo.contains("angry")) {
+								mood = Class.ANGRY;
+							}
+							else{
+								System.out.println("No emotion listed");
+								System.exit(1);
+							}
 
-						trainingImages.add(new TrainingImage(person,sunglasses,mood,image, idLocal, id));
-						idLocal++;
-						id++;
+							trainingImages.add(new TrainingImage(person,sunglasses,mood,image, idLocal, id));
+							idLocal++;
+							id++;
 						}
 
 					}
@@ -165,7 +166,7 @@ public class ImageReader {
 
 		normalizeImages();
 	}
-	
+
 	public void printInfo() {
 		System.out.println(peopleList);
 		for (TrainingImage t : trainingImages) {
