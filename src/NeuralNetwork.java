@@ -21,9 +21,12 @@ public class NeuralNetwork {
 	ArrayList<TrainingImage> trainingImages;
 	int numCheckCorrect = 0;
 	int numCheckTotal = 0;
-	boolean allowSunglasses = true;
 	private int totalNumImages;
 	private int numTrainingCutoff;
+
+	boolean allowSunglasses = true;
+	boolean runTest = true;
+
 
 	public static void main(String[] args) {
 		NeuralNetwork network = new NeuralNetwork();
@@ -35,12 +38,16 @@ public class NeuralNetwork {
 		reader.createTrainingInput(allowSunglasses);
 		trainingImages = reader.getTrainingImages();
 
-		makeNetwork();
+		if (runTest) {
+			makeTestNetwork();
+		}
+		else {
+			makeNetwork();
+		}
 
-		//For testing only
 		/*
 	    int i = 0;
-	    int bound = 10;
+	    int bound = 100;
 
 	    while(i < bound) {
 	    	 trainInputs();
@@ -123,6 +130,8 @@ public class NeuralNetwork {
 		//row represents an output, cols are nodes that store vars for that output (in the case of XOR example, 1 output node)
 		inputs = new double[][]{{1, 1}, {1, 0}, {0, 1}, {0, 0}};
 		trueOutputs = new double[][]{{0}, {1}, {1}, {0}};
+		checkInputs = inputs;
+		checkOutputs = trueOutputs;
 
 		NeuronLayer inputLayer = new NeuronLayer(LayerType.INPUT, numInputNeurons, 0, 0);
 		NeuronLayer hiddenLayer = new NeuronLayer(LayerType.HIDDEN, 3, numInputNeurons, 1);
@@ -183,29 +192,48 @@ public class NeuralNetwork {
 					System.out.println("Final output: " + Arrays.toString(x_prev));
 					System.out.println("VALIDATING Expected Output: " + Arrays.toString(checkOutputs[i]) );
 					outputs = x_prev;
-					
-					//if final layer, check if matches expected values
-					int expectedIndex = 0;
-					int highestIndex = 0;
-					int maxVal = 0;
-					for (int k = 0 ; k < checkOutputs[i].length; k++) {
-						if (checkOutputs[i][k] == 1.0) {
-							expectedIndex = k;
-							break;
+
+					if (runTest) {
+						double expected = trueOutputs[i][0];
+						double actual = outputs[0];
+						double actualRounded;
+						
+						if (actual > .5) {
+							actualRounded = 1.0;
+						}
+						else {
+							actualRounded = 0.0;
+						}
+						
+						numCheckTotal++;
+						if (actualRounded == expected) {
+							numCheckCorrect++;
 						}
 					}
-					for (int a = 0; a < outputs.length; a++) {
-						if (outputs[a] > maxVal) {
-							maxVal = 0;
-							highestIndex = a;
+					else {
+						//if final layer, check if matches expected values
+						int expectedIndex = 0;
+						int highestIndex = 0;
+						int maxVal = 0;
+						for (int k = 0 ; k < checkOutputs[i].length; k++) {
+							if (checkOutputs[i][k] == 1.0) {
+								expectedIndex = k;
+								break;
+							}
+						}
+						for (int a = 0; a < outputs.length; a++) {
+							if (outputs[a] > maxVal) {
+								maxVal = 0;
+								highestIndex = a;
+							}
+						}
+
+						numCheckTotal++;
+						if (highestIndex == expectedIndex) {
+							numCheckCorrect++;
 						}
 					}
-					
-					numCheckTotal++;
-					if (highestIndex == expectedIndex) {
-						numCheckCorrect++;
-					}
-					
+
 				}
 				else {//must be hidden layer
 					System.out.println("Output length: " + x_prev.length);
@@ -334,6 +362,7 @@ public class NeuralNetwork {
 				if(r == 0) continue; //input layer will not change, so don't print it
 				layers[r].printState();
 			}
+			System.out.println("Training iteration complete.");
 		}
 	}
 
