@@ -39,7 +39,7 @@ public class NeuralNetwork {
 		numInputNeurons = 2;
 		numOutputNeurons = 1;
 		//Learning rate determines how far in the direction of steepest descent to change the parameter
-		learningRate = 0.8; //Recommended by Machine Learning -Tom Mitchell for this type of problem
+		learningRate = 0.8; //.3 is recommended by Machine Learning -Tom Mitchell for this type of problem
 		//row, col
 		//row represents an input, cols are variables in that input
 		//row represents an output, cols are nodes that store vars for that output (in the case of XOR example, 1 output node)
