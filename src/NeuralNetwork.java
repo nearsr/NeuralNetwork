@@ -45,16 +45,19 @@ public class NeuralNetwork {
 			makeNetwork();
 		}
 
-		/*
-	    int i = 0;
-	    int bound = 500;
+		if(runTest) {
+			int i = 0;
+			int bound = 1000;
 
-	    while(i < bound) {
-	    	 trainInputs();
-	    	 i++;
-	    }*/
+			while(i < bound) {
+				trainInputs();
+				i++;
+			}
+		}
+		else {
+			trainInputs();
+		}
 
-		trainInputs();
 		validateInputs();
 	}
 
@@ -197,14 +200,14 @@ public class NeuralNetwork {
 						double expected = trueOutputs[i][0];
 						double actual = outputs[0];
 						double actualRounded;
-						
+
 						if (actual > .5) {
 							actualRounded = 1.0;
 						}
 						else {
 							actualRounded = 0.0;
 						}
-						
+
 						numCheckTotal++;
 						if (actualRounded == expected) {
 							numCheckCorrect++;
